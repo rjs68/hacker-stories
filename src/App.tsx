@@ -22,23 +22,43 @@ function App() {
     <div>
       <h1>My Hacker Stories</h1>
 
-      <label htmlFor="search">Search: </label>
-      <input type="text" id="search" />
+      <Search />
 
       <hr />
 
+      <List />
+    </div>
+  )
+}
+
+const List = () => {
+  return (
+    <ul>
       {list.map((item) => {
         return (
           <li key={item.objectID}>
-            Title: {item.title}
-            <div>Author: {item.author}</div>
-            <div>Comments: {item.num_comments}</div>
-            <div>Points: {item.points}</div>
-            <div>Link: <a href={item.url}>{item.url}</a></div>
+            <span>
+              <a href={item.url}>{item.title}</a>
+            </span>
+            <br />
+            <span>{item.author}</span>
+            <br />
+            <span>{item.num_comments}</span>
+            <br />
+            <span>{item.points}</span>
           </li>
         )
       })}
-    </div>
+    </ul>
+  )
+}
+
+const Search = () => {
+  return (
+    <>
+      <label htmlFor="search">Search: </label>
+      <input type="text" id="search" />
+    </>
   )
 }
 
