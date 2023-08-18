@@ -29,7 +29,7 @@ const App = () => {
     }
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState('React');
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -50,41 +50,44 @@ const App = () => {
   );
 }
 
-const List = (props: {list: Array<Story>}) => (
+const List = ({ list }: {list: Array<Story>}) => (
     <ul>
-      {props.list.map((item) => <Item key={item.objectID} item={item} />)}
+      {list.map((item) => <Item key={item.objectID} item={item} />)}
     </ul>
 );
 
-const Item = (props: {item: Story}) => (
+const Item = ({ item }: {item: Story}) => (
   <li>
     <span>
-      <a href={props.item.url}>{props.item.title}</a>
+      <a href={item.url}>{item.title}</a>
     </span>
     <br />
-    <span>{props.item.author}</span>
+    <span>{item.author}</span>
     <br />
-    <span>{props.item.num_comments}</span>
+    <span>{item.num_comments}</span>
     <br />
-    <span>{props.item.points}</span>
+    <span>{item.points}</span>
   </li>
 );
 
-const Search = (props: {searchTerm: string,onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void}) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    props.onSearch(event);
-  }
-
-  return (
-    <>
-      <label htmlFor="search">Search: </label>
-      <input type="text" id="search" onChange={handleChange} />
-
-      <p>
-        Searching for <strong>{props.searchTerm}</strong>.
-      </p>
-    </>
-  );
+type SearchProps = {
+  searchTerm: string,
+  onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
+
+const Search = ({ searchTerm, onSearch}: SearchProps) => (
+  <>
+    <label htmlFor="search">Search: </label>
+    <input type="text"
+      id="search"
+      onChange={onSearch}
+      value={searchTerm}
+    />
+
+    <p>
+      Searching for <strong>{searchTerm}</strong>.
+    </p>
+  </>
+);
 
 export default App
