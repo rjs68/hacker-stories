@@ -1,3 +1,5 @@
+import React from "react"
+
 interface Story {
   title: string,
   url: string,
@@ -25,7 +27,7 @@ const App = () => {
       points: 5,
       objectID: 1
     }
-  ]
+  ];
 
   return (
     <div>
@@ -37,14 +39,14 @@ const App = () => {
 
       <List list={stories} />
     </div>
-  )
+  );
 }
 
 const List = (props: {list: Array<Story>}) => (
     <ul>
       {props.list.map((item) => <Item key={item.objectID} item={item} />)}
     </ul>
-)
+);
 
 const Item = (props: {item: Story}) => (
   <li>
@@ -58,20 +60,25 @@ const Item = (props: {item: Story}) => (
     <br />
     <span>{props.item.points}</span>
   </li>
-)
+);
 
 const Search = () => {
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event)
-    console.log(event.target.value)
+    setSearchTerm(event.target.value);
   }
 
   return (
     <>
       <label htmlFor="search">Search: </label>
       <input type="text" id="search" onChange={handleChange} />
+
+      <p>
+        Searching for <strong>{searchTerm}</strong>.
+      </p>
     </>
-  )
+  );
 }
 
 export default App
