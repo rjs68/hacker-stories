@@ -17,8 +17,7 @@ const list = [
   }
 ]
 
-function App() {
-  return (
+const App = () => (
     <div>
       <h1>My Hacker Stories</h1>
 
@@ -28,14 +27,11 @@ function App() {
 
       <List />
     </div>
-  )
-}
+)
 
-const List = () => {
-  return (
+const List = () => (
     <ul>
-      {list.map((item) => {
-        return (
+      {list.map((item) => (
           <li key={item.objectID}>
             <span>
               <a href={item.url}>{item.title}</a>
@@ -48,16 +44,20 @@ const List = () => {
             <span>{item.points}</span>
           </li>
         )
-      })}
+      )}
     </ul>
-  )
-}
+)
 
 const Search = () => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event)
+    console.log(event.target.value)
+  }
+
   return (
     <>
       <label htmlFor="search">Search: </label>
-      <input type="text" id="search" />
+      <input type="text" id="search" onChange={handleChange} />
     </>
   )
 }
