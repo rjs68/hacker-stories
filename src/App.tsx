@@ -48,15 +48,17 @@ const App = () => {
   const searchedStories = stories.filter((story) => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div>
+    <>
       <h1>My Hacker Stories</h1>
 
-      <Search searchTerm={searchTerm} onSearch={handleSearch} />
+      <InputWithLabel id="search" value={searchTerm} onInputChange={handleSearch}>
+        <strong>Search:</strong>
+      </InputWithLabel>
 
       <hr />
 
       <List list={searchedStories} />
-    </div>
+    </>
   );
 }
 
@@ -80,22 +82,26 @@ const Item = ({ item }: {item: Story}) => (
   </li>
 );
 
-type SearchProps = {
-  searchTerm: string,
-  onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
+type InputWithLabelProps = {
+  children?: string | JSX.Element,
+  id: string,
+  value: string,
+  type?: string,
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const Search = ({ searchTerm, onSearch}: SearchProps) => (
+const InputWithLabel = ({ children, id, value, type="text", onInputChange}: InputWithLabelProps) => (
   <>
-    <label htmlFor="search">Search: </label>
-    <input type="text"
-      id="search"
-      onChange={onSearch}
-      value={searchTerm}
+    <label htmlFor={id}>{children}</label>
+    &nbsp;
+    <input id={id}
+      type={type}
+      onChange={onInputChange}
+      value={value}
     />
 
     <p>
-      Searching for <strong>{searchTerm}</strong>.
+      Searching for <strong>{value}</strong>.
     </p>
   </>
 );
