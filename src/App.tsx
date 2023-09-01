@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 interface Story {
   title: string,
@@ -29,7 +29,13 @@ const App = () => {
     }
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState('React');
+  const [searchTerm, setSearchTerm] = React.useState(
+    localStorage.getItem('search') || 'React'
+  );
+
+  useEffect(() => {
+    localStorage.setItem('search', searchTerm);
+  }, [searchTerm]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
