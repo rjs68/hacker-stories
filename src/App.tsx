@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 interface Story {
   title: string,
@@ -7,6 +7,16 @@ interface Story {
   num_comments: number,
   points: number,
   objectID: number
+}
+
+const useStorageState: (key: string, initialState: string) => [string, Dispatch<SetStateAction<string>>] = (key: string, initialState: string) => {
+  const [value, setValue] = useState(localStorage.getItem(key) || initialState);
+
+  useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
 }
 
 const App = () => {
@@ -29,13 +39,7 @@ const App = () => {
     }
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState(
-    localStorage.getItem('search') || 'React'
-  );
-
-  useEffect(() => {
-    localStorage.setItem('search', searchTerm);
-  }, [searchTerm]);
+  const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
