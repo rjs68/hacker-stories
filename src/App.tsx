@@ -28,6 +28,13 @@ const initialStories = [
   }
 ];
 
+const getAsyncStories = () => new Promise<{data: {stories: Story[]}}>((resolve) => 
+  setTimeout(
+    () => resolve({data: {stories: initialStories}}),
+    2000
+  )
+);
+
 const useStorageState: (key: string, initialState: string) => [string, Dispatch<SetStateAction<string>>] = (key: string, initialState: string) => {
   const [value, setValue] = useState(localStorage.getItem(key) || initialState);
 
@@ -39,8 +46,12 @@ const useStorageState: (key: string, initialState: string) => [string, Dispatch<
 }
 
 const App = () => {
-  const [stories, setStories] = useState(initialStories);
+  const [stories, setStories] = useState<Story[]>([]);
   const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
+
+  useEffect(() => {
+    getAsyncStories().then((result) => setStories(result.data.stories));
+  }, []);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
