@@ -89,18 +89,17 @@ const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
+  const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
 
   const [stories, dispatchStories] = React.useReducer(
     storiesReducer,
     { data: [], isLoading: false, isError: false }
   );
 
-  const handleFetchStories = React.useCallback(async () => {
-    if (!searchTerm) return;
-  
+  const handleFetchStories = React.useCallback(async () => {  
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
-    fetch(`${API_ENDPOINT}${searchTerm}`)
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
         dispatchStories({
@@ -111,14 +110,18 @@ const App = () => {
       .catch(() =>
         dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
       );
-  }, [searchTerm]);
+  }, [url]);
 
   useEffect(() => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  }
+
+  const handleSearchSubmit = () => {
+    setUrl(`${API_ENDPOINT}${searchTerm}`);
   }
 
   const handleRemoveStory = (item: Story) => {
@@ -132,9 +135,21 @@ const App = () => {
     <>
       <h1>My Hacker Stories</h1>
 
-      <InputWithLabel id="search" value={searchTerm} isFocused onInputChange={handleSearch}>
+      <InputWithLabel id="search" value={searchTerm} isFocused onInputChange={handleSearchInput}>
         <strong>Search:</strong>
       </InputWithLabel>
+
+      <button
+        type="button"
+        disabled={!searchTerm}
+        onClick={handleSearchSubmit}
+      >
+        Submit
+      </button>
+
+      <p>
+        Searching for <strong>{searchTerm}</strong>.
+      </p>
 
       <hr />
 
@@ -212,10 +227,6 @@ const InputWithLabel = (
       value={value}
       autoFocus={isFocused}
     />
-
-    <p>
-      Searching for <strong>{value}</strong>.
-    </p>
   </>
 );
 
