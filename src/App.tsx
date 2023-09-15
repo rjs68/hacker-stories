@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState } from "react"
 import axios from 'axios';
 
 type Story = {
@@ -92,24 +92,24 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
   const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
 
-  const [stories, dispatchStories] = React.useReducer(
+  const [stories, dispatchStories] = useReducer(
     storiesReducer,
     { data: [], isLoading: false, isError: false }
   );
 
-  const handleFetchStories = React.useCallback(async () => {  
+  const handleFetchStories = useCallback(async () => {  
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
-    axios.get(url)
-      .then((result) => {
-        dispatchStories({
-          type: 'STORIES_FETCH_SUCCESS',
-          payload: result.data.hits,
-        });
-      })
-      .catch(() =>
-        dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
-      );
+    try {
+      const result = await axios.get(url);
+
+      dispatchStories({
+        type: 'STORIES_FETCH_SUCCESS',
+        payload: result.data.hits,
+      });
+    } catch {
+      dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
+    }
   }, [url]);
 
   useEffect(() => {
